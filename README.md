@@ -16,6 +16,7 @@ php artisan key:generate
 
 Add `OPENROUTE_APIKEY` to your `.env` file
 
+
 ## Start application
 
 ```bash
