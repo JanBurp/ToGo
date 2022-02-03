@@ -8,7 +8,7 @@ Add `OPENROUTE_APIKEY` to your `.env` file
 
 ## Testing
 
-  `php artisan test
+    `php artisan test
 
 ## Features
 
