@@ -13,11 +13,15 @@ class LocationsTest extends TestCase
 {
 
     var $testLocation = 'Nederland';
+    var $testID       = -1;
 
-    public function test_post() {
 
+    public function test_location_crud() {
+
+        // POST
         $response = $this->postJson('/api/locations',[ 'location' => $this->testLocation ]);
-
+        $responseData = $response->getOriginalContent();
+        $this->testID = $responseData['id'];
         $response
             ->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) =>
@@ -28,13 +32,8 @@ class LocationsTest extends TestCase
                     ->etc()
             );
 
-    }
-
-
-    public function test_patch() {
-
-        $response = $this->patchJson('/api/locations/1',[ 'visited' => true ]);
-
+        // PATCH
+        $response = $this->patchJson('/api/locations/' . $this->testID ,[ 'visited' => true ]);
         $response
             ->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) =>
@@ -45,12 +44,9 @@ class LocationsTest extends TestCase
                     ->etc()
             );
 
-    }
 
-    public function test_get() {
-
+        // GET
         $response = $this->getJson('/api/locations');
-
         $response
             ->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) =>
@@ -59,12 +55,9 @@ class LocationsTest extends TestCase
                     ->has('openrout_apikey')
             );
 
-    }
 
-
-    public function test_delete() {
-
-        $response = $this->deleteJson('/api/locations/1');
+        // DELETE
+        $response = $this->deleteJson('/api/locations/' . $this->testID);
 
         $response
             ->assertStatus(200)
@@ -74,8 +67,6 @@ class LocationsTest extends TestCase
             );
 
     }
-
-
 
 
 }

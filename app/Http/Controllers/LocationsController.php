@@ -65,12 +65,15 @@ class LocationsController extends Controller
         $location = Locations::find($id);
         $data = $request->all();
 
-        if ( isset($data['visited']) )      $location->visited  = $data['visited'];
-        if ( isset($data['location']) )     $location->location = $data['location'];
+        if ( $data ) {
+            if ( isset($data['visited']) )      $location->visited  = $data['visited'];
+            if ( isset($data['location']) )     $location->location = $data['location'];
 
-        if ( $location->save() ) {
-            return response()->json($location);
+            if ( $location->save() ) {
+                return response()->json($location);
+            }
         }
+
         return response()->json(['error'=>true]);
     }
 
