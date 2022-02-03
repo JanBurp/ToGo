@@ -5,7 +5,7 @@
         <ul class="list-group">
             <li class="list-group-item">
                 <div v-if="!hasLocations" class="alert alert-success">Add your first location to your ToGo-list</div>
-                <NewLocationInput v-model="newLocation" api_key="openrout_apikey" @submit="addLocation()"></NewLocationInput>
+                <NewLocationInput v-model="newLocation" :api_key="openrout_apikey" @submit="addLocation()"></NewLocationInput>
             </li>
             <li v-for="location in allLocations" class="list-group-item">
                 <div class="row">

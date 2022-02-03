@@ -31,11 +31,10 @@
 <script>
 export default {
 
-    props: ['modelValue'],
+    props: ['modelValue','api_key'],
 
     data : function() {
         return {
-            openrout_apikey         : '',
             newLocation             : this.value,
             foundLocations          : [],
             foundLocationIndex      : -1,
@@ -76,7 +75,7 @@ export default {
 
         findLocation() {
             let self = this;
-            axios.get('https://api.openrouteservice.org/geocode/autocomplete?api_key=5b3ce3597851110001cf62489d75357d37574ff28f52efd4662ae05e&text=' + self.newLocation )
+            axios.get('https://api.openrouteservice.org/geocode/autocomplete?api_key='+this.api_key+'&text=' + self.newLocation )
                 .then(function (response) {
                     let features = response.data.features;
                     self.foundLocations = features.map( e => e.properties.name );
