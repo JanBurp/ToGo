@@ -26,10 +26,14 @@ class TogoController extends Controller
 
         $location = Locations::where('id',$id)->first();
 
-        return view('location',[
-            'openrout_apikey' => env('OPENROUTE_APIKEY'),
-            'location'        => $location,
-        ]);
+        if ($location) {
+            return view('location',[
+                'openrout_apikey' => env('OPENROUTE_APIKEY'),
+                'location'        => $location,
+            ]);
+        }
+
+        return view('notfound');
     }
 
 
