@@ -17,5 +17,7 @@ use App\Http\Controllers\LocationsController;
 */
 
 
-Route::apiResource('locations', LocationsController::class);
+Route::apiResource('locations', LocationsController::class)->except([
+    'show'
+]);
 
