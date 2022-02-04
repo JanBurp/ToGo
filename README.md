@@ -4,11 +4,30 @@ A simple ToGo list to make a list of places you'd like to go to in the future. (
 
 ## Install
 
+Make your `.env` file and all dependencies:
+
+
+```bash
+cp ./.env.example ./.env
+composer install
+npm ci
+php artisan key:generate
+```
+
 Add `OPENROUTE_APIKEY` to your `.env` file
+
+
+## Start application
+
+```bash
+./vendor/bin/sail up
+```
+
+access application on [localhost:80](http://localhost:80).
 
 ## Testing
 
-    `php artisan test
+    php artisan test
 
 ## Features
 
