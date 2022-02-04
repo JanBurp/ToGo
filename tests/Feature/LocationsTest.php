@@ -21,6 +21,8 @@ class LocationsTest extends TestCase
         $response = $this->postJson('/api/locations', $testLocation->toArray() );
         $responseData = $response->getOriginalContent();
         $testID = $responseData['id'];
+        $testSlug = $responseData['slug'];
+
         $response
             ->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) =>
@@ -56,7 +58,7 @@ class LocationsTest extends TestCase
 
 
         // PAGE test
-        $response = $this->get('/location/' . $testID);
+        $response = $this->get('/location/' . $testSlug);
         $response->assertStatus(200);
 
 
@@ -74,12 +76,12 @@ class LocationsTest extends TestCase
 
     public function test_location_page() {
 
-        $response = $this->get('/location/should_give_nice_error');
+        $response = $this->get('/location/should_give_nice_error_457867345672345692756979');
         $response->assertStatus(200);
 
         $first = Locations::first();
         if ($first) {
-            $response = $this->get('/location/' . $first->id);
+            $response = $this->get('/location/' . $first->slug);
             $response->assertStatus(200);
         }
 

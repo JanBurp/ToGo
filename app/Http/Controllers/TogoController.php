@@ -22,9 +22,14 @@ class TogoController extends Controller
      * Display location page
      *
      */
-    public function location( $id ) {
+    public function location( $slug ) {
 
-        $location = Locations::where('id',$id)->first();
+        $location = Locations::where('slug',$slug)->first();
+
+        // Backwards compatible -> slug could also be the id
+        if ( !$location and is_numeric($slug) ) {
+            $location = Locations::where('id',$slug)->first();
+        }
 
         if ($location) {
             return view('location',[

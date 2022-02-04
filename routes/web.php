@@ -17,6 +17,6 @@ use App\Http\Controllers\TogoController;
 */
 
 Route::get('/', [TogoController::class, 'index'] );
-Route::get('/location/{id}', [TogoController::class, 'location'] );
+Route::get('/location/{slug}', [TogoController::class, 'location'] );
 
 require __DIR__.'/auth.php';

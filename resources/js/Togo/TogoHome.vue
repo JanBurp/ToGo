@@ -10,7 +10,7 @@
             <li v-for="location in allLocations" class="list-group-item">
                 <div class="row">
                     <div class="col-8 col-md-10">
-                        <span class="location" :class="locationClass(location)"><a :href="'location/'+location.id">{{location.location}}</a></span>
+                        <span class="location" :class="locationClass(location)"><a :href="'location/'+locationSlug(location)">{{location.location}}</a></span>
                     </div>
                     <div class="col-4 col-md-2">
                         <span class="action largefont" @click="deleteLocation(location)" title="delete this location"><i class="bi-x-circle text-danger"></i></span>
@@ -101,6 +101,12 @@ export default {
             let c = '';
             if (location.visited) c += 'visited ';
             return c;
+        },
+
+        locationSlug(location) {
+            let slug = location.slug;
+            if ( location.slug==null ) slug = location.id;
+            return slug;
         },
 
 
