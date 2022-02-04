@@ -16,7 +16,7 @@ class LocationsFactory extends Factory
         return [
             'user_id'       => 1,
             'location'      => $this->faker->country(),
-            'visited'       => rand(0,1),
+            'visited'       => (rand(0,1)?false:true),
             'visited_at'    => $this->faker->date(),
         ];
     }

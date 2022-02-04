@@ -12,34 +12,33 @@ use App\Models\Locations;
 class LocationsTest extends TestCase
 {
 
-    var $testLocation = 'Nederland';
-    var $testID       = -1;
-
 
     public function test_location_crud() {
 
+        $testLocation = Locations::factory()->make();
+
         // POST
-        $response = $this->postJson('/api/locations',[ 'location' => $this->testLocation ]);
+        $response = $this->postJson('/api/locations', $testLocation->toArray() );
         $responseData = $response->getOriginalContent();
-        $this->testID = $responseData['id'];
+        $testID = $responseData['id'];
         $response
             ->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) =>
                 $json
                     ->has('location')
-                    ->where('location', $this->testLocation )
-                    ->where('visited', false )
+                    ->where('location', $testLocation->location )
+                    ->where('visited', $testLocation->visited )
                     ->etc()
             );
 
         // PATCH
-        $response = $this->patchJson('/api/locations/' . $this->testID ,[ 'visited' => true ]);
+        $response = $this->patchJson('/api/locations/' . $testID ,[ 'visited' => true ]);
         $response
             ->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) =>
                 $json
                     ->has('location')
-                    ->where('location', $this->testLocation )
+                    ->where('location', $testLocation->location )
                     ->where('visited', true )
                     ->etc()
             );
@@ -56,15 +55,33 @@ class LocationsTest extends TestCase
             );
 
 
-        // DELETE
-        $response = $this->deleteJson('/api/locations/' . $this->testID);
+        // PAGE test
+        $response = $this->get('/location/' . $testID);
+        $response->assertStatus(200);
 
+
+        // DELETE
+        $response = $this->deleteJson('/api/locations/' . $testID);
         $response
             ->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) =>
                 $json
                     ->has('deleted')
             );
+
+    }
+
+
+    public function test_location_page() {
+
+        $response = $this->get('/location/should_give_nice_error');
+        $response->assertStatus(200);
+
+        $first = Locations::first();
+        if ($first) {
+            $response = $this->get('/location/' . $first->id);
+            $response->assertStatus(200);
+        }
 
     }
 
