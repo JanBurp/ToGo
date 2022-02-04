@@ -20,6 +20,10 @@
 
 <style scoped>
 
+    input {
+        background-color: #FFF;
+    }
+
     button {
         float: right;
         padding: 0;

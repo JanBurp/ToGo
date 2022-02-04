@@ -2,7 +2,7 @@
      <loading v-model:active="showLoader"></loading>
 
     <div class="p-6 mt-4">
-        <ul class="list-group">
+        <ul class="list-group basic-box">
             <li class="list-group-item">
                 <div v-if="!hasLocations" class="alert alert-success">Add your first location to your ToGo-list</div>
                 <NewLocationInput v-model="newLocation" :api_key="openrout_apikey" @submit="addLocation()"></NewLocationInput>
@@ -14,6 +14,22 @@
 
     </div>
 </template>
+
+<style scoped>
+
+    .basic-box {
+        border: solid 2px #084BC9;
+    }
+
+    .list-group-item {
+        border-top: none;
+        border-left: none;
+        border-right: none;
+    }
+
+
+</style>
+
 
 <script>
 

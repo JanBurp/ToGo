@@ -14,4 +14,6 @@
         @endif
     </p>
 
+    <a class="btn btn-primary btn-sm mt-4" href="/"><i class="bi bi-chevron-left"></i> Back to my locations</a>
+
 @endsection

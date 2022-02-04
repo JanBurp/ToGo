@@ -12,7 +12,9 @@
 
     <body class="container">
 
-        <h1>ToGo - @yield('title')</h1>
+        <div class="header">
+            <h1><a href="/">ToGo</a> - @yield('title')</h1>
+        </div>
 
         @yield('content')
 
