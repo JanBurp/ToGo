@@ -24682,7 +24682,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         self.setLoader(false);
         return Promise.resolve(response.data);
       })["catch"](function (error) {
-        console.log(error);
+        if (error.response) {
+          // Request made and server responded
+          console.log(error.response.data);
+          alert('Sorry an error: ' + error.response.data.message); // console.log(error.response.status);
+          // console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log(error.request);
+          alert('Sorry an error. Try again.');
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+          alert('Sorry an error. ' + error.message);
+        }
+
         self.setLoader(false);
       });
     },
@@ -24733,8 +24747,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     deleteLocation: function deleteLocation(location) {
       var self = this;
-      this.api('delete', 'locations/' + location.id).then(function (deleted) {
-        if (deleted) {
+      this.api('delete', 'locations/' + location.id).then(function (response) {
+        if (response.deleted) {
           var idx = self.locations.findIndex(function (e) {
             return e.id == location.id;
           });
@@ -24742,6 +24756,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           if (idx >= 0) {
             self.locations.splice(idx, 1);
           }
+        } else {
+          alert('Could not delete.');
         }
       });
     }

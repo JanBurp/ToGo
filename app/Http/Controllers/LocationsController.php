@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class LocationsController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -29,6 +30,13 @@ class LocationsController extends Controller
      */
     public function store(Request $request)
     {
+
+        $validated = $request->validate([
+            'location' => 'required|string',
+            'visited'  => 'boolean',
+        ]);
+
+
         $location = new Locations;
 
         $location->user_id      = 1; // TODO - replace with auth user_id in future
@@ -62,17 +70,29 @@ class LocationsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $location = Locations::find($id);
-        $data = $request->all();
+        $validated = $request->validate([
+            'location' => 'string',
+            'visited'  => 'boolean',
+        ]);
 
-        if ( $data ) {
-            if ( isset($data['visited']) )      $location->visited  = $data['visited'];
-            if ( isset($data['location']) )     $location->location = $data['location'];
+        if ( is_numeric($id)) {
 
-            if ( $location->save() ) {
-                return response()->json($location);
-            }
+            $location = Locations::find($id);
+
+            if ( $location ) {
+                $data = $request->all();
+
+                if ( $data ) {
+                    if ( isset($data['visited']) )      $location->visited  = $data['visited'];
+                    if ( isset($data['location']) )     $location->location = $data['location'];
+
+                    if ( $location->save() ) {
+                        return response()->json($location);
+                    }
+                }
+              }
         }
+
 
         return response()->json(['error'=>true]);
     }
@@ -85,11 +105,24 @@ class LocationsController extends Controller
      */
     public function destroy( $id )
     {
-        $location = Locations::find($id);
-        $deleted  = $location->delete();
+        if ( is_numeric($id)) {
+
+            $location = Locations::find($id);
+
+            if ( $location ) {
+
+                $deleted  = $location->delete();
+
+                return response()->json([
+                    'deleted' => $deleted,
+                ]);
+
+            }
+
+        }
 
         return response()->json([
-            'deleted' => $deleted,
+            'deleted' => false,
         ]);
     }
 }
