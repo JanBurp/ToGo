@@ -10,9 +10,9 @@
                 </div>
             </div>
             <div class="col-4 col-md-2">
-                <span class="action" :class="disabledAddButton">
-                    <button class="btn btn-link largefont" type="submit"><i class="bi-plus-circle text-success"></i></button>
-                </span>
+                <button class="btn btn-link largefont" :class="disabledAddButton" type="submit">
+                    <ActionIcon title="add this location" icon="plus-circle"></ActionIcon>
+                </button>
             </div>
         </div>
     </form>
@@ -29,9 +29,21 @@
 </style>
 
 <script>
+import ActionIcon from './ActionIcon.vue';
 export default {
 
-    props: ['modelValue','api_key'],
+    components: {
+        ActionIcon
+    },
+
+    props: {
+        'modelValue': {
+            type:String,
+        },
+        'api_key' : {
+            type:String,
+        },
+    },
 
     data : function() {
         return {
@@ -100,9 +112,11 @@ export default {
             if (this.foundLocationIndex>=0) {
                 this.newLocation = this.foundLocations[this.foundLocationIndex];
             }
-            this.$emit('update:modelValue', this.newLocation);
-            this.$emit('submit');
-            this.resetAll();
+            if ( this.newLocation!=='' ) {
+                this.$emit('update:modelValue', this.newLocation);
+                this.$emit('submit');
+                this.resetAll();
+            }
         },
 
         foundLocationClass(index) {
