@@ -32,7 +32,7 @@ class LocationsController extends Controller
         $location = new Locations;
 
         $location->user_id      = 1; // TODO - replace with auth user_id in future
-        $location->visited      = false;
+        $location->visited      = $request->input('visited',false);
         $location->location     = $request->input('location');
 
         if ( $location->save() ) {
