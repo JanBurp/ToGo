@@ -21,7 +21,7 @@
 <style scoped>
 
     input {
-        background-color: #FFF;
+        background-color: #FFF!important;
     }
 
     button {
