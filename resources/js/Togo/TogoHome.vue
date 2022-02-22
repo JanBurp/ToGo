@@ -1,5 +1,5 @@
 <template>
-     <loading v-model:active="showLoader"></loading>
+     <loading v-if="loaderState.show" :active="true"></loading>
 
     <div class="p-6 mt-4">
         <ul class="list-group basic-box">
@@ -33,7 +33,7 @@
 
 <script>
 
-import {api,errorHandler} from './togoService.js';
+import {api,errorHandler,loaderState} from './togoService.js';
 
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
@@ -49,12 +49,10 @@ export default {
     data : function() {
         return {
             openrout_apikey : '',
-
-            showLoader : false,
+            loaderState,
 
             locations: [],
             newLocation : '',
-
         };
     },
 
@@ -76,20 +74,8 @@ export default {
 
     methods : {
 
-        setLoader(loading) {
-            this.showLoader = loading;
-        },
-
-        // Wrapper around api service, just for setting the loader on/off
-        async api(method,url,data) {
-            this.setLoader(true);
-            let response = await api(method,url,data);
-            this.setLoader(false);
-            return response;
-        },
-
         async getLocations() {
-            let response = await this.api( 'get', 'locations' );
+            let response = await api( 'get', 'locations' );
             if (response) {
                 this.locations       = response.locations;
                 this.openrout_apikey = response.openrout_apikey;
@@ -100,7 +86,7 @@ export default {
             let data = {
                 visited : ! location.visited,
             }
-            let response = await this.api( 'patch', 'locations/'+location.id, data );
+            let response = await api( 'patch', 'locations/'+location.id, data );
             if ( response ) {
                 let idx = this.locations.findIndex( e => e.id==location.id);
                 if (idx>=0) {
@@ -113,7 +99,7 @@ export default {
 
         async addLocation() {
             if (this.newLocation!='') {
-                let response = await this.api( 'post', 'locations', { location: this.newLocation } );
+                let response = await api( 'post', 'locations', { location: this.newLocation } );
                 if ( response ) {
                     this.locations.unshift(response);
                 }
@@ -122,7 +108,7 @@ export default {
         },
 
         async deleteLocation(location) {
-            let response = await this.api( 'delete', 'locations/' + location.id );
+            let response = await api( 'delete', 'locations/' + location.id );
             if (response.deleted) {
                 let idx = this.locations.findIndex( e => e.id==location.id);
                 if (idx>=0) {

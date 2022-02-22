@@ -1,5 +1,16 @@
+import {reactive} from 'vue';
+
+export const loaderState = reactive({
+    show : false,
+});
+
+export function setloaderState(state) {
+    loaderState.show = state;
+}
 
 export async function api(method,url,data) {
+    setloaderState(true);
+
     let request = {
         method : method,
         url    : 'api/' + url,
@@ -10,9 +21,11 @@ export async function api(method,url,data) {
 
     try {
         let response = await axios( request );
+        setloaderState(false);
         return response.data;
     }
     catch(error) {
+        setloaderState(false);
         errorHandler(error);
     }
 }
