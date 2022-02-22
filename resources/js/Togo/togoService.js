@@ -31,20 +31,17 @@ export async function openrouteApiSearch(api_key,search) {
 
 
 export function errorHandler(error) {
+    let message = 'Sorry an error. ';
     if (error.response) {
         // Request made and server responded
-        console.log(error.response.data);
-        alert('Sorry an error: ' + error.response.data.message);
-        // console.log(error.response.status);
-        // console.log(error.response.headers);
+        message += error.response.data.message;
     } else if (error.request) {
         // The request was made but no response was received
-        console.log(error.request);
-        alert('Sorry an error. Try again.');
+        message += 'Try again.';
     } else {
         // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-        alert('Sorry an error. ' + error.message);
+        message += error.message;
     }
+    alert(message);
 }
 
