@@ -33,6 +33,8 @@
 
 <script>
 
+import {api,errorHandler} from './togoService.js';
+
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
@@ -47,7 +49,6 @@ export default {
     data : function() {
         return {
             openrout_apikey : '',
-            apiRoot : 'api/',
 
             showLoader : false,
 
@@ -79,99 +80,58 @@ export default {
             this.showLoader = loading;
         },
 
-
-        api(method,url,data) {
-            let self = this;
+        // Wrapper around api service, just for setting the loader on/off
+        async api(method,url,data) {
             this.setLoader(true);
-
-            let request = {
-                method : method,
-                url    : this.apiRoot + url,
-            }
-            if (data) {
-                request.data = data;
-            }
-
-            return axios( request )
-                .then(function (response) {
-                    self.setLoader(false);
-                    return Promise.resolve(response.data);
-                })
-                .catch(function (error) {
-                    if (error.response) {
-                        // Request made and server responded
-                        console.log(error.response.data);
-                        alert('Sorry an error: ' + error.response.data.message);
-                        // console.log(error.response.status);
-                        // console.log(error.response.headers);
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        console.log(error.request);
-                        alert('Sorry an error. Try again.');
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                        alert('Sorry an error. ' + error.message);
-                    }
-                    self.setLoader(false);
-                })
+            let response = await api(method,url,data);
+            this.setLoader(false);
+            return response;
         },
 
-
-        getLocations() {
-            let self = this;
-            this.api( 'get', 'locations' ).then(function(data) {
-                if (data) {
-                    self.locations       = data.locations;
-                    self.openrout_apikey = data.openrout_apikey;
-                }
-            })
+        async getLocations() {
+            let response = await this.api( 'get', 'locations' );
+            if (response) {
+                this.locations       = response.locations;
+                this.openrout_apikey = response.openrout_apikey;
+            }
         },
 
-        toggleVisitedLocation(location) {
-            let self = this;
+        async toggleVisitedLocation(location) {
             let data = {
                 visited : ! location.visited,
             }
-
-            this.api( 'patch', 'locations/'+location.id, data ).then(function( data ) {
-                if ( data ) {
-                    let idx = self.locations.findIndex( e => e.id==location.id);
-                    if (idx>=0) {
-                        let current = self.locations[idx];
-                        let updated = {...current,...data}
-                        self.locations[idx] = updated;
-                    }
+            let response = await this.api( 'patch', 'locations/'+location.id, data );
+            if ( response ) {
+                let idx = this.locations.findIndex( e => e.id==location.id);
+                if (idx>=0) {
+                    let current = this.locations[idx];
+                    let updated = {...current,...response}
+                    this.locations[idx] = updated;
                 }
-            });
-
-        },
-
-        addLocation() {
-            let self = this;
-            if (self.newLocation!='') {
-                self.api( 'post', 'locations', { location: self.newLocation } ).then(function( data ) {
-                    if ( data ) {
-                        self.locations.unshift(data);
-                    }
-                });
             }
-            self.newLocation = '';
         },
 
-        deleteLocation(location) {
-            let self = this;
-            this.api( 'delete', 'locations/' + location.id ).then(function(response) {
-                if (response.deleted) {
-                    let idx = self.locations.findIndex( e => e.id==location.id);
-                    if (idx>=0) {
-                        self.locations.splice(idx,1);
-                    }
+        async addLocation() {
+            if (this.newLocation!='') {
+                let response = await this.api( 'post', 'locations', { location: this.newLocation } );
+                if ( response ) {
+                    this.locations.unshift(response);
                 }
-                else {
-                    alert('Could not delete.');
+            }
+            this.newLocation = '';
+        },
+
+        async deleteLocation(location) {
+            let response = await this.api( 'delete', 'locations/' + location.id );
+            if (response.deleted) {
+                let idx = this.locations.findIndex( e => e.id==location.id);
+                if (idx>=0) {
+                    this.locations.splice(idx,1);
                 }
-            });
+            }
+            else {
+                alert('Could not delete.');
+            }
         },
 
     },
