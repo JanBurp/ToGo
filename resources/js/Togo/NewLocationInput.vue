@@ -93,7 +93,7 @@ export default {
 
         async findLocation() {
             let features = await openrouteApiSearch(this.api_key,this.newLocation);
-            this.foundLocations = features.map( e = e.properties.name );
+            this.foundLocations = features.map( e => e.properties.name );
         },
 
         selectFoundLocation(foundLocation,index) {
