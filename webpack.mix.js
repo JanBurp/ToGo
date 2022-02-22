@@ -15,6 +15,7 @@ mix.js('resources/js/app.js', 'public/js')
     .vue()
     .sass('resources/sass/app.scss', 'public/css')
     .webpackConfig(require('./webpack.config'))
+    .sourceMaps()
     .browserSync('togo.test');
 
 if (mix.inProduction()) {

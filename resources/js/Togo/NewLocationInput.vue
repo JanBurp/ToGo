@@ -21,7 +21,7 @@
 <style scoped>
 
     input {
-        background-color: #FFF;
+        background-color: #FFF!important;
     }
 
     button {
@@ -33,6 +33,8 @@
 </style>
 
 <script>
+
+import {openrouteApiSearch} from './togoService.js';
 import ActionIcon from './ActionIcon.vue';
 export default {
 
@@ -68,7 +70,7 @@ export default {
         },
 
         disabledAddButton() {
-            if (this.newLocation=='') {
+            if ( ! this.newLocation ) {
                 return 'disabled';
             }
             return '';
@@ -89,16 +91,9 @@ export default {
 
     methods : {
 
-        findLocation() {
-            let self = this;
-            axios.get('https://api.openrouteservice.org/geocode/autocomplete?api_key='+this.api_key+'&text=' + self.newLocation )
-                .then(function (response) {
-                    let features = response.data.features;
-                    self.foundLocations = features.map( e => e.properties.name );
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
+        async findLocation() {
+            let features = await openrouteApiSearch(this.api_key,this.newLocation);
+            this.foundLocations = features.map( e = e.properties.name );
         },
 
         selectFoundLocation(foundLocation,index) {
@@ -118,7 +113,6 @@ export default {
             }
             if ( this.newLocation!=='' ) {
                 this.$emit('update:modelValue', this.newLocation);
-                this.$emit('submit');
                 this.resetAll();
             }
         },
