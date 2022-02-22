@@ -67,13 +67,6 @@ export default {
             return this.locations.sort( (a,b) => a.created_at < b.created_at );
         },
 
-        disabledAddButton() {
-            if (this.newLocation=='') {
-                return 'disabled';
-            }
-            return '';
-        },
-
     },
 
     mounted() {

@@ -68,7 +68,7 @@ export default {
         },
 
         disabledAddButton() {
-            if (this.newLocation=='') {
+            if ( ! this.newLocation ) {
                 return 'disabled';
             }
             return '';
